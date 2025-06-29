@@ -1,0 +1,15 @@
+<div class="user-box">
+  <h2>Users List</h2>
+  <p class="subtitle">Click a user to start chatting.</p>
+
+  <div class="user-row">
+    <div
+      *ngFor="let user of users"
+      class="user-card"
+      (click)="selectUser(user)"
+    >
+      <div><strong>Name:</strong> {{ user.name || 'N/A' }}</div>
+      <div><strong>Phone:</strong> {{ user.phone || 'N/A' }}</div>
+    </div>
+  </div>
+</div>

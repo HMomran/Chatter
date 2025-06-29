@@ -1,0 +1,23 @@
+<div class="center-container">
+  <form class="example-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="logo-area">
+      <mat-icon color="primary" fontIcon="chat" style="font-size:48px;">chat</mat-icon>
+    </div>
+    <h2 class="form-title">Sign In</h2>
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Ex. Hassan Omran" formControlName="name" required>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="outline">
+      <mat-label>Phone Number</mat-label>
+      <input matInput placeholder="Ex. 320*****" formControlName="phone" required>
+    </mat-form-field>
+
+    <div class="button-group">
+      <button mat-stroked-button color="primary" [routerLink]="['/']" class="wk">Back</button>
+      <button mat-stroked-button type="reset" class="long-reset-btn">Reset</button>
+      <button mat-raised-button color="primary" type="submit" class="wk">Sign In</button>
+    </div>
+  </form>
+</div>

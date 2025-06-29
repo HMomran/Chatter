@@ -1,0 +1,20 @@
+<div class="center-container">
+  <form class="example-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h2 class="form-title">Sign Up</h2>
+    <mat-form-field class="example-full-width">
+      <mat-label>Enter your name</mat-label>
+      <input matInput placeholder="Ex. Hassan Omran" formControlName="name" required>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Enter your phone number</mat-label>
+      <input matInput placeholder="Ex. 320*****" formControlName="phone" required>
+    </mat-form-field>
+
+    <div class="button-group">
+      <button mat-stroked-button color="primary" [routerLink]="['/']" class="wk">Back</button>
+      <button mat-stroked-button type="reset" class="long-reset-btn">Reset</button>
+      <button mat-raised-button type="submit" class="wk">Save</button>
+    </div>
+  </form>
+</div>

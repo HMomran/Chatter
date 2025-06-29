@@ -1,0 +1,69 @@
+.container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  padding: 48px 32px 36px 32px;
+  max-width: 370px;
+  width: 100%;
+  margin: 48px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.8s;
+}
+
+h1 {
+  color: #000000;
+  font-size: 2.4rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  color: #555;
+  font-size: 1.1rem;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 18px;
+  width: 100%;
+  justify-content: center;
+}
+
+button[mat-raised-button] {
+  min-width: 110px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(79,140,255,0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+button[mat-raised-button]:hover {
+  box-shadow: 0 4px 16px rgba(79,140,255,0.16);
+}
+
+@media (max-width: 500px) {
+  .container {
+    padding: 24px 6px 18px 6px;
+    max-width: 98vw;
+  }
+  .button-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+button[mat-raised-button]:hover, button[mat-stroked-button]:hover {
+  box-shadow: 0 4px 16px rgba(79,140,255,0.16);
+  color: #cacdd3;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}

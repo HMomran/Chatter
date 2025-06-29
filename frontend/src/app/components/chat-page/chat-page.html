@@ -1,0 +1,28 @@
+<div class="chat-box">
+  <h3 class="current-user">Current User: {{ currentUserId }}</h3>
+
+  <div class="messages-list">
+    <p *ngFor="let msg of messages" class="message-text">
+      <strong>{{ msg.sender }}:</strong> {{ msg.message }}
+    </p>
+  </div>
+
+  <form class="chat-form" (ngSubmit)="sendMessage()">
+    <input
+      [(ngModel)]="messageText"
+      name="messageText"
+      placeholder="Type a message"
+      required
+      class="chat-input"
+    />
+    <button type="submit" [disabled]="!messageText.trim()" class="send-btn">Send</button>
+  </form>
+
+  <button class="switch-btn" (click)="switchUser()">
+    Switch to {{ currentUserId === 'user1' ? 'user2' : 'user1' }}
+  </button>
+</div>
+
+<div class="exit-container">
+  <button mat-icon-button [routerLink]="['/']" class="exit-btn">Exit</button>
+</div>
