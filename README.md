@@ -107,4 +107,4 @@ Optional backend environment variables: `PORT` (3000), `DATA_FILE` (`backend/dat
 
 This remains a local demo. The file store supports one backend process and modest data. Public deployment needs HTTPS, login throttling, verified identity/recovery, and a production database. Bearer tokens are stored in session storage, and offline clients recover history by reopening a conversation.
 
-The updated backend integration test, frontend headless Chrome tests, and production build pass. The frontend has 17 npm dependency advisories from the prior audit; compatible updates did not resolve those advisories. Visual inspection through the browser-control tool was unavailable because computer-use permissions were not granted.
+The updated backend integration test, frontend headless Chrome tests, and production build pass. The frontend has 17 npm dependency advisories from the prior audit; compatible updates did not resolve those advisories.
