@@ -1,0 +1,70 @@
+{
+  "customers": [
+    {
+      "_id": "e2fd7e1b-c288-4934-96ae-deedcfeed014",
+      "name": "hassan",
+      "phone": "32075000"
+    },
+    {
+      "_id": "1bc77997-0660-49ac-99b7-2f2729016948",
+      "name": "omran",
+      "phone": "0000000"
+    },
+    {
+      "_id": "aad6d3bd-9576-42ce-867d-403c329aa005",
+      "name": "Hassan Omran",
+      "phone": "32000000",
+      "passwordHash": "5389aa828e6658f0e2e6ea8dd93dd48e:5fb91d2841d4590021150d92e17213cf0e211aa44863713c10fc2e43930211ce9cb02aa23e732a772a2b48463b0a348a6ac94e553593eeedaf6d3ea3c2ebc09a"
+    },
+    {
+      "_id": "55ad15a5-02a7-47b4-868f-c46e0f283d51",
+      "name": "ali",
+      "phone": "32077777",
+      "passwordHash": "43bc6c695ca3e46a362b98a0e3bdc65f:ca35f3be1bcebc77e208769e9fa1aa5ba860c6e18d0b6d1c7c64792521730388c7da636e659cd00db5d5cb6e2287db64682e213e26c1ac95aab5b13f27fce00d"
+    }
+  ],
+  "messages": [
+    {
+      "_id": "fec9534f-40e4-49e0-a3a9-4d96aa4b67e8",
+      "sender": "1bc77997-0660-49ac-99b7-2f2729016948",
+      "receiver": "e2fd7e1b-c288-4934-96ae-deedcfeed014",
+      "message": "hi",
+      "timestamp": "2026-10-29T09:30:44.412Z"
+    },
+    {
+      "_id": "3c4f72b5-f40b-4d2f-ab9d-011c50ed3b8c",
+      "sender": "e2fd7e1b-c288-4934-96ae-deedcfeed014",
+      "receiver": "1bc77997-0660-49ac-99b7-2f2729016948",
+      "message": "hello there",
+      "timestamp": "2026-10-29T09:30:56.886Z"
+    },
+    {
+      "_id": "574ff9c8-a14a-49bd-bc3f-a07bf43a1a17",
+      "sender": "1bc77997-0660-49ac-99b7-2f2729016948",
+      "receiver": "e2fd7e1b-c288-4934-96ae-deedcfeed014",
+      "message": "how are you man",
+      "timestamp": "2026-10-29T09:31:06.685Z"
+    },
+    {
+      "_id": "7206c719-0231-4497-8fbe-1b89e1601e12",
+      "sender": "aad6d3bd-9576-42ce-867d-403c329aa005",
+      "receiver": "e2fd7e1b-c288-4934-96ae-deedcfeed014",
+      "message": "hello there",
+      "timestamp": "2026-10-29T09:43:31.804Z"
+    },
+    {
+      "_id": "fc3b1d8d-85d0-4cff-b5ca-b4203dd721e8",
+      "sender": "55ad15a5-02a7-47b4-868f-c46e0f283d51",
+      "receiver": "aad6d3bd-9576-42ce-867d-403c329aa005",
+      "message": "hello there",
+      "timestamp": "2026-10-29T09:44:12.378Z"
+    },
+    {
+      "_id": "b975702f-aa57-4562-8032-ef8b2e29a389",
+      "sender": "aad6d3bd-9576-42ce-867d-403c329aa005",
+      "receiver": "55ad15a5-02a7-47b4-868f-c46e0f283d51",
+      "message": "hi man",
+      "timestamp": "2026-10-29T09:44:24.370Z"
+    }
+  ]
+}
