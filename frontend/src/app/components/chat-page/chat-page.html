@@ -1,28 +1,3 @@
-<div class="chat-box">
-  <h3 class="current-user">Current User: {{ currentUserId }}</h3>
-
-  <div class="messages-list">
-    <p *ngFor="let msg of messages" class="message-text">
-      <strong>{{ msg.sender }}:</strong> {{ msg.message }}
-    </p>
-  </div>
-
-  <form class="chat-form" (ngSubmit)="sendMessage()">
-    <input
-      [(ngModel)]="messageText"
-      name="messageText"
-      placeholder="Type a message"
-      required
-      class="chat-input"
-    />
-    <button type="submit" [disabled]="!messageText.trim()" class="send-btn">Send</button>
-  </form>
-
-  <button class="switch-btn" (click)="switchUser()">
-    Switch to {{ currentUserId === 'user1' ? 'user2' : 'user1' }}
-  </button>
-</div>
-
-<div class="exit-container">
-  <button mat-icon-button [routerLink]="['/']" class="exit-btn">Exit</button>
-</div>
+<main class="conversation-shell"><header class="chat-header"><a class="back-link" routerLink="/UsersPage" aria-label="Back to people">←</a><span class="avatar peach">{{ receiverName.charAt(0).toUpperCase() }}</span><div><h1>{{ receiverName }}</h1><p>In conversation with {{ currentUserName }}</p></div><a class="brand chat-brand" routerLink="/UsersPage">chatter</a></header>
+<section class="chat-timeline" #timeline role="log" aria-label="Conversation messages" aria-live="polite"><p class="history-note">{{ loading ? 'Loading your conversation…' : 'Your conversation history' }}</p><div class="chat-empty" *ngIf="!loading && !messages.length"><span class="avatar large peach">{{ receiverName.charAt(0).toUpperCase() }}</span><h2>It starts with a hello.</h2><p>Send your first message to {{ receiverName }}.</p></div><div class="message-row" *ngFor="let msg of messages" [class.own]="msg.sender === currentUserId"><div class="message-bubble"><p>{{ msg.message }}</p><time [attr.datetime]="msg.timestamp">{{ msg.timestamp | date:'MMM d, h:mm a' }}</time></div></div></section>
+<footer class="chat-compose"><div class="form-error" role="alert" *ngIf="error">{{ error }}</div><form (ngSubmit)="sendMessage()"><input [(ngModel)]="messageText" name="messageText" aria-label="Message" placeholder="Write a message…" required maxlength="4000" autocomplete="off"><button class="btn-primary" type="submit" [disabled]="!messageText.trim() || sending">{{ sending ? 'Sending…' : 'Send' }}</button></form><p>Messages are saved to this conversation.</p></footer></main>

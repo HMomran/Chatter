@@ -1,20 +1,18 @@
-<div class="center-container">
-  <form class="example-form" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <h2 class="form-title">Sign Up</h2>
-    <mat-form-field class="example-full-width">
-      <mat-label>Enter your name</mat-label>
-      <input matInput placeholder="Ex. Hassan Omran" formControlName="name" required>
-    </mat-form-field>
+<main class="auth-layout">
+  <aside class="auth-story"><a class="brand" routerLink="/" aria-label="Chatter home"><span class="brand-icon" aria-hidden="true">c</span>chatter</a><div class="auth-introduction"><h1>A familiar voice.<br>A new conversation.</h1><p>A small space for the people you want to stay close to.</p><div class="auth-exchange" aria-label="Example conversation"><p>Got a minute?</p><p>For you? Always.</p></div></div><a class="text-link" routerLink="/">About Chatter</a></aside>
+  <section class="auth-panel"><a routerLink="/" class="back-link">Back to home</a>
+    <div class="auth-content"><h2>Create your account</h2><p class="muted">Set up your profile and choose a password.</p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <label for="name">Full name</label><input id="name" [attr.aria-invalid]="form.controls.name.touched && form.controls.name.invalid" [attr.aria-describedby]="form.controls.name.touched && form.controls.name.invalid ? 'name-error' : null" formControlName="name" autocomplete="name" placeholder="Your name" maxlength="100"><small id="name-error" *ngIf="form.controls.name.touched && form.controls.name.invalid" class="field-error">Please enter your name.</small>
+      <label for="phone">Phone number</label><input id="phone" [attr.aria-invalid]="form.controls.phone.touched && form.controls.phone.invalid" [attr.aria-describedby]="form.controls.phone.touched && form.controls.phone.invalid ? 'phone-error' : null" formControlName="phone" type="tel" autocomplete="tel" placeholder="e.g. +973 3200 0000">
+      <small id="phone-error" *ngIf="form.controls.phone.touched && form.controls.phone.invalid" class="field-error">Enter a valid phone number.</small>
+      <label for="password">Password</label><div class="password-field"><input id="password" [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid" [attr.aria-describedby]="form.controls.password.touched && form.controls.password.invalid ? 'password-error' : null" formControlName="password" [type]="showPassword ? 'text' : 'password'" autocomplete="new-password" placeholder="At least 8 characters"><button type="button" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">{{ showPassword ? 'Hide' : 'Show' }}</button></div>
+      <small id="password-error" *ngIf="form.controls.password.touched && form.controls.password.invalid" class="field-error">Use 8–128 characters.</small>
+      <label for="confirm">Confirm password</label><input id="confirm" formControlName="confirmPassword" [type]="showPassword ? 'text' : 'password'" autocomplete="new-password" placeholder="Enter your password again">
+      <p class="form-error" role="alert" *ngIf="error">{{ error }}</p>
+      <button class="btn-primary wide" type="submit" [disabled]="busy">{{ busy ? 'Creating account…' : 'Create account' }}</button>
+    </form><p class="auth-switch">Already have an account? <a routerLink="/SignIn">Sign in</a></p>
+    <p class="auth-note">Your phone identifies your account. It isn’t verified by SMS.</p></div>
 
-    <mat-form-field class="example-full-width">
-      <mat-label>Enter your phone number</mat-label>
-      <input matInput placeholder="Ex. 320*****" formControlName="phone" required>
-    </mat-form-field>
-
-    <div class="button-group">
-      <button mat-stroked-button color="primary" [routerLink]="['/']" class="wk">Back</button>
-      <button mat-stroked-button type="reset" class="long-reset-btn">Reset</button>
-      <button mat-raised-button type="submit" class="wk">Save</button>
-    </div>
-  </form>
-</div>
+  </section>
+</main>

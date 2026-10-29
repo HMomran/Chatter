@@ -1,17 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const Message = require('../models/message');
-
-router.get('/customers/:id', async (req, res) => {
-    try {
-        const id = req.params.id;
-        const messages = await Message.find({
-            $or: [{ senderID: id }, { ReciverID: id }]
-        }).populate('senderID', 'name phone').populate('ReciverID', 'name phone');
-        res.status(200).json(messages);
-    } catch (error) {
-        res.status(500).json({ message: "An error occurred", error: error });
-    }
+const router = require('express').Router();
+router.use(require('../auth').requireUser);
+router.get('/customers/:id', (req, res) => {
+  const { id } = req.params;
+  if (id !== req.user._id) return res.status(403).json({ message: 'Not authorized' });
+  const peer = req.query.peer;
+  res.json(req.app.locals.store.data.messages.filter(m => peer
+    ? (m.sender === id && m.receiver === peer) || (m.sender === peer && m.receiver === id)
+    : m.sender === id || m.receiver === id));
 });
-
 module.exports = router;

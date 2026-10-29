@@ -1,0 +1,10 @@
+node_modules/
+frontend/dist/
+frontend/.angular/
+backend/data/
+.env
+*.log
+
+# Local AI agent skills
+.agents/skills/
+

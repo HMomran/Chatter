@@ -1,8 +1,8 @@
-<div class="container">
-  <h1>Chat With Me</h1>
-  <p class="subtitle">Connect and chat instantly with friends and colleagues.</p>
-  <div class="button-group">
-    <button mat-raised-button color="primary" [routerLink]="['/SignIn']">Sign In</button>
-    <button mat-raised-button color="accent" [routerLink]="['/SignUp']">Sign Up</button>
-  </div>
-</div>
+<main class="landing">
+  <nav class="topbar" aria-label="Main navigation"><a class="brand" routerLink="/" aria-label="Chatter home"><span class="brand-icon" aria-hidden="true">c</span>chatter</a><a class="btn-secondary" routerLink="/SignIn">Sign in</a></nav>
+  <section class="hero" aria-labelledby="welcome-heading">
+    <div class="hero-copy"><h1 id="welcome-heading">A place for your conversations.</h1><p>Find your people, share a thought, and pick up where you left off. Just you and the person on the other side.</p><div class="hero-actions"><a class="btn-primary" routerLink="/SignUp">Create an account</a><a class="text-link" routerLink="/SignIn">I already have an account</a></div></div>
+    <div class="conversation-preview" aria-label="Example conversation"><div class="preview-heading"><span class="avatar">J</span><div><strong>Jamie</strong><span>Example conversation</span></div></div><div class="preview-thread"><p class="preview-message">Found that little bookshop you mentioned.</p><p class="preview-message outgoing">The one by the sea?</p><p class="preview-message">That’s the one. You were right about it.</p><p class="preview-message outgoing">Some things are better shared.</p></div><div class="preview-composer"><span>A conversation starts with a hello.</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 4 17 8-17 8 3-8-3-8Zm3 8h14"/></svg></div></div>
+  </section>
+  <section class="landing-details" aria-label="About Chatter"><div><h2>Your people, easy to find.</h2><p>A searchable directory makes starting a conversation simple.</p></div><div><h2>Pick up where you left off.</h2><p>Your message history stays with the conversation.</p></div><div><h2>One conversation at a time.</h2><p>A focused space without feeds, likes, or distractions.</p></div></section>
+</main>

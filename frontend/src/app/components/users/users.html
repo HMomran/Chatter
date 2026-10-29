@@ -1,15 +1,66 @@
-<div class="user-box">
-  <h2>Users List</h2>
-  <p class="subtitle">Click a user to start chatting.</p>
+<a class="skip-link" href="#people-directory">Skip to people</a>
+<main class="workspace">
+  <aside class="sidebar" aria-label="Account and navigation">
+    <a class="brand light" routerLink="/" aria-label="Chatter home"><span class="brand-icon" aria-hidden="true">c</span>chatter</a>
+    <nav aria-label="Main navigation">
 
-  <div class="user-row">
-    <div
-      *ngFor="let user of users"
-      class="user-card"
-      (click)="selectUser(user)"
-    >
-      <div><strong>Name:</strong> {{ user.name || 'N/A' }}</div>
-      <div><strong>Phone:</strong> {{ user.phone || 'N/A' }}</div>
+      <a class="side-link active" routerLink="/UsersPage" aria-current="page">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v2"/></svg>
+        People <span class="count">{{ users.length }}</span>
+      </a>
+    </nav>
+    <div class="profile">
+      <span class="avatar">{{ initials(currentUser?.name || 'You') }}</span>
+      <div><strong>{{ currentUser?.name }}</strong><small>Personal account</small></div>
+      <button type="button" (click)="logout()" [disabled]="signingOut" aria-label="Sign out" title="Sign out">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H4v16h6m4-12 4 4-4 4m-6-4h12"/></svg>
+      </button>
     </div>
-  </div>
-</div>
+  </aside>
+
+  <section class="workspace-main" id="people-directory" tabindex="-1">
+    <header class="workspace-top"><span>Workspace <span class="breadcrumb-divider" aria-hidden="true">/</span> <strong>People</strong></span><span class="account-label">Personal workspace</span></header>
+    <div class="people-content">
+      <div class="page-heading">
+        <div><h1>People</h1><p class="muted">A familiar name is a good place to start.</p></div>
+        <button class="btn-secondary refresh-button" type="button" (click)="initData()" [disabled]="loading">
+          <svg viewBox="0 0 24 24" aria-hidden="true" [class.refreshing]="loading"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></svg>
+          {{ loading ? 'Refreshing' : 'Refresh people' }}
+        </button>
+      </div>
+
+      <section class="directory" aria-labelledby="directory-heading" [attr.aria-busy]="loading">
+        <div class="directory-toolbar">
+          <div class="directory-title"><h2 id="directory-heading">Everyone</h2><span class="directory-count">{{ users.length }}</span></div>
+          <div class="search-control">
+            <label for="people-search">Search people</label>
+            <div class="search-field"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="people-search" [(ngModel)]="search" type="search" placeholder="Name or phone number" autocomplete="off"></div>
+          </div>
+        </div>
+        <div class="directory-meta"><p role="status" aria-live="polite">{{ statusText }}</p></div>
+
+        <div class="directory-error" role="alert" *ngIf="error"><div><strong>We couldn’t load your directory.</strong><p>Your connection may be interrupted. Please try again.</p></div><button class="btn-secondary" type="button" (click)="initData()" [disabled]="loading">Try again</button></div>
+
+        <div class="people-grid skeleton-grid" *ngIf="loading && !users.length" aria-hidden="true"><div class="person-skeleton" *ngFor="let item of [1,2,3]"><span></span><div></div><div></div></div></div>
+
+        <ul class="people-grid" *ngIf="filteredUsers.length">
+          <li *ngFor="let user of filteredUsers; trackBy: trackUser">
+            <button type="button" class="person-card" (click)="selectUser(user)" [attr.aria-label]="'Start a conversation with ' + user.name">
+              <span class="person-top"><span class="avatar large">{{ initials(user.name) }}</span></span>
+              <span class="person-details"><span class="person-name">{{ user.name }}</span><span class="person-phone">{{ user.phone }}</span></span>
+              <span class="person-bottom">Message</span>
+            </button>
+          </li>
+        </ul>
+
+        <div class="empty-state" *ngIf="!loading && !error && !filteredUsers.length">
+          <span class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M21 11a8 8 0 0 1-8 8H7l-5 3V11a9 9 0 0 1 19 0Z"/></svg></span>
+          <h2>{{ search ? 'No people found' : 'Your next conversation is waiting' }}</h2>
+          <p>{{ search ? 'Try another name or phone number, or clear your search to see everyone.' : 'Other registered people will appear here. Once someone joins, refresh your directory to start chatting.' }}</p>
+          <button class="btn-secondary" type="button" *ngIf="search" (click)="search = ''">Clear search</button>
+        </div>
+      </section>
+
+    </div>
+  </section>
+</main>

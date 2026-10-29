@@ -1,39 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-
-export interface Chat {
-  _id: string;
-  name: string;
-  phone: string;
-  email: string;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+import { Injectable, inject } from '@angular/core';
+import { Session } from './session';
+export interface Chat { _id: string; name: string; phone: string; }
+export interface AuthResult { customer: Chat; token: string; }
+@Injectable({ providedIn: 'root' })
 export class ChatService {
-  private api = "http://localhost:3000/api/customers"
-
+  private api = 'http://localhost:3000/api/customers';
+  private session = inject(Session);
   constructor(private http: HttpClient) {}
-
-  get(): Observable<Chat[]> {
-    return this.http.get<Chat[]>(this.api);
-  }
-
-  getById(id: string): Observable<Chat> {
-    return this.http.get<Chat>(`${this.api}/${id}`);
-  }
-
-  post(client: Chat): Observable<Chat> {
-    return this.http.post<Chat>(this.api, client);
-  }
-
-  checkCustomer(name: string, phone: string) {
-  return this.http.get<{ exists: boolean }>(`${this.api}/check-customer/${name}/${phone}`);
- }
-
- checkPhone(phone: string) {
-  return this.http.get<{ exists: boolean }>(`${this.api}/check-phone/${phone}`);
-}
+  get() { return this.http.get<Chat[]>(this.api, { headers: this.session.headers }); }
+  getById(id: string) { return this.http.get<Chat>(`${this.api}/${id}`, { headers: this.session.headers }); }
+  post(client: { name: string; phone: string; password: string }) { return this.http.post<AuthResult>(this.api, client); }
+  login(phone: string, password: string) { return this.http.post<AuthResult>(`${this.api}/login`, { phone, password }); }
+  logout() { return this.http.post(`${this.api}/logout`, {}, { headers: this.session.headers }); }
 }

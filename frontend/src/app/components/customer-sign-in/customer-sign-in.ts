@@ -1,51 +1,33 @@
 import { Component, inject } from '@angular/core';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatLabel } from '@angular/material/form-field';
-import { RouterModule } from '@angular/router';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ChatService } from '../../services/chat';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-
+import { Session } from '../../services/session';
 @Component({
-  selector: 'app-customer-sign-in',
-    imports: [ReactiveFormsModule, MatFormField, MatInput, MatLabel, RouterModule,CommonModule,
-    MatIconModule],
-  templateUrl: './customer-sign-in.html',
-  styleUrl: './customer-sign-in.css'
+  selector: 'app-customer-sign-in', standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  templateUrl: './customer-sign-in.html', styleUrl: './customer-sign-in.css'
 })
 export class CustomerSignIn {
-  form!: FormGroup;
-  [x: string]: any;
-  private chatService = inject(ChatService);
-  router = inject(Router);
+  private api = inject(ChatService);
+  private session = inject(Session);
+  private router = inject(Router);
+  error = ''; busy = false; showPassword = false; submitted = false;
+  form = new FormGroup({
 
-  ngOnInit(): void {
-    this.form = new FormGroup({
-      name: new FormControl('', Validators.required),
-      phone: new FormControl('', Validators.required),
+    phone: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^\+?[\d\s()-]{7,25}$/)] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(8), Validators.maxLength(128)] }),
+
+  });
+  onSubmit() {
+    this.submitted = true; this.form.markAllAsTouched(); this.error = '';
+    if (this.form.invalid || this.busy) return;
+
+    this.busy = true;
+    this.api.login(this.form.value.phone!, this.form.value.password!).subscribe({
+      next: result => { this.session.save(result); this.router.navigate(['/UsersPage']); },
+      error: error => { this.busy = false; this.error = error.error?.message || 'Cannot connect. Please check your connection and try again.'; }
     });
   }
-
-  onSubmit() {
-    if (this.form.valid) {
-      const name = this.form.value.name;
-      const phone = this.form.value.phone;
-      this.chatService.checkCustomer(name, phone).subscribe(
-        result => {
-          if (result.exists) {
-            this.router.navigate(['/UsersPage']);
-          } else {
-            this.router.navigate(['/SignUp']);
-          }
-        },
-        error => {
-          console.error('Error checking customer:', error);
-        }
-      );
-    }
-  }
 }
-

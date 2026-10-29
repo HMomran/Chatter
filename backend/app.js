@@ -1,79 +1,58 @@
 const express = require('express');
 const cors = require('cors');
-const app = express();
-const mongoose = require('mongoose');
-const PORT = 3000;
-
-app.use(cors());
-app.use(express.json());
-const CustomerRoutes = require('./routes/customers');
-const MessageRoutes = require('./routes/messages');
-const http = require('http');
-const socketIo = require('socket.io');
-
-
-app.use('/api/messages', MessageRoutes);
-app.use('/api/Customers', CustomerRoutes);
-
-const server = http.createServer(app);
-const io = socketIo(server, {
-    cors: {
-        origin: 'http://localhost:4200',
-        methods: ['GET', 'POST'],
-    }
-});
-app.post('/', (req, res) => {
-    res.send("This is the BackEnd of the chat");
-});
-
-app.get('/', (req, res) => {
-    res.send(`
-        <html>
-            <head>
-                <title>Chat Backend</title>
-                <style>
-                    body { font-family: Arial, sans-serif; background: #f0f0f0; text-align: center; padding-top: 50px; }
-                    .container { background: #fff; padding: 40px; border-radius: 8px; display: inline-block; box-shadow: 0 2px 8px rgba(0,0,0,0.1);}
-                    h1 { color: #333; }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h1>This is the BackEnd of the chat</h1>
-                    <p>Welcome to your chat application's backend server.</p>
-                </div>
-            </body>
-        </html>
-    `);
-});
-
-io.on('connection', (socket) => {
-    console.log('✅ Socket connected:', socket.id);
-
-    socket.on('sendMessage', (data) => {
-        console.log('💬 Message:', data);
-        io.emit('receiveMessage', data);
+const http = require('node:http');
+const path = require('node:path');
+const { Server } = require('socket.io');
+const { createStore } = require('./store');
+const { createAuth } = require('./auth');
+function createServer(options = {}) {
+  const store = createStore(options.dataFile || process.env.DATA_FILE || path.join(__dirname, 'data/chat.json'));
+  const app = express();
+  app.use(cors());
+  app.use(express.json({ limit: '32kb' }));
+  app.locals.store = store;
+  const auth = createAuth(store);
+  app.locals.auth = auth;
+  app.get('/', (_req, res) => res.json({ status: 'ok', service: 'Chat backend' }));
+  app.use('/api/customers', require('./routes/customers'));
+  app.use('/api/messages', require('./routes/messages'));
+  app.use((err, _req, res, _next) => res.status(err.status || 500).json({ message: err.status === 400 ? 'Invalid JSON' : 'Server error' }));
+  const server = http.createServer(app);
+  const io = new Server(server, { cors: { origin: process.env.FRONTEND_ORIGIN || 'http://localhost:4200' } });
+  app.locals.io = io;
+  io.use((socket, next) => {
+    const user = auth.user(socket.handshake.auth?.token);
+    if (!user) return next(new Error('Your session has ended. Please sign in again.'));
+    socket.data.userId = user._id;
+    next();
+  });
+  io.on('connection', socket => {
+    socket.join(socket.data.userId);
+    socket.on('join', (id, ack = () => {}) => {
+      if (socket.data.userId !== id) return ack({ error: 'Not authorized' });
+      if (socket.data.userId) socket.leave(socket.data.userId);
+      socket.data.userId = id;
+      socket.join(id);
+      ack({ ok: true });
     });
-
-    socket.on('disconnect', () => {
-        console.log('❌ Socket disconnected:', socket.id);
+    socket.on('sendMessage', (input, ack = () => {}) => {
+      if (!auth.user(socket.handshake.auth?.token)) return ack({ error: 'Your session has ended. Please sign in again.' });
+      const sender = socket.data.userId;
+      const receiver = input?.receiver;
+      const message = typeof input?.message === 'string' ? input.message.trim() : '';
+      if (!sender || !store.data.customers.some(c => c._id === receiver) || !message || message.length > 4000) return ack({ error: 'Choose a valid recipient and enter 1–4000 characters.' });
+      const msg = { _id: store.id(), sender, receiver, message, timestamp: new Date().toISOString() };
+      try { store.data.messages.push(msg); store.save(); }
+      catch { store.data.messages.pop(); return ack({ error: 'Could not save message.' }); }
+      io.to(sender).to(receiver).emit('receiveMessage', msg);
+      ack({ ok: true });
     });
-});
-
-server.listen(PORT, (error) => {
-    if (!error) {
-        console.log('done', PORT);
-    } else {
-        console.log('error:', error);
-    }
-});
-
-main().catch((error) => console.log(error));
-
-async function main() {
-    const connectionString = "mongodb+srv://hassanmirz6638:YtGJKSyQOGF7QXTF@cluster0.a3rurcj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0luster0";
-    await mongoose.connect(connectionString);
-    mongoose.set('strictQuery', true);
+  });
+  return { app, server, io };
 }
-
-module.exports = app;
+if (require.main === module) {
+  const { server } = createServer();
+  server.on('error', error => { console.error(error.message); process.exit(1); });
+  server.listen(process.env.PORT || 3000, () => console.log('Chat backend: http://localhost:' + (process.env.PORT || 3000)));
+}
+module.exports = { createServer };
